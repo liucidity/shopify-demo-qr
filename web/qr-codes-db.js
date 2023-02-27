@@ -123,6 +123,13 @@ export const QRCodesDB = {
     return true;
   },
 
+  generateQrcodeDestinationUrl: function (qrcode) {
+    return
+    `${shopify.api.config.hostScheme}://${shopify.api.config.hostName}/qrcodes/${qrcode.id}/scan`;
+  },
+
+
+
   __query: function (sql, params = []) {
     return new Promise((resolve, reject) => {
       this.db.all(sql, params, (err, result) => {
