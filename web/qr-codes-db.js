@@ -140,7 +140,18 @@ export const QRCodesDB = {
       default:
         throw `Unrecognized destination: "${qrcode.destination}"`
     }
+  },
 
+  __hasQrCodesTable: async function () {
+    const query = `
+      SELECT name from sqlite_schema
+      WHERE
+        type = 'table' AND
+        name = ?;
+    `;
+
+    const rows = await this.__query(query, [this.qrCodesTableName]);
+    return rows.length === 1;
   },
 
 
