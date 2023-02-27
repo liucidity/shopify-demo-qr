@@ -128,6 +128,21 @@ export const QRCodesDB = {
     `${shopify.api.config.hostScheme}://${shopify.api.config.hostName}/qrcodes/${qrcode.id}/scan`;
   },
 
+  handleCodeScan: async function (qrcode) {
+    await this.__increaseScanCount(qrcode);
+
+    const url = new URL(qrcode.shopDomain);
+    switch (qrcode.destination) {
+      case "product":
+        return this.__goToProductView(url, qrcode);
+      case "checkout":
+        return this.__goToProductCheckout(url, qrcode);
+      default:
+        throw `Unrecognized destination: "${qrcode.destination}"`
+    }
+
+  },
+
 
 
   __query: function (sql, params = []) {
