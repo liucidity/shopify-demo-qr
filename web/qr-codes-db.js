@@ -111,6 +111,18 @@ export const QRCodesDB = {
     return this.__addImageUrl(rows[0])
   },
 
+  delete: async function (id) {
+    await this.ready;
+
+    const query = `
+      DELETE FROM ${this.qrCodesTableName}
+      WHERE id = ?;
+    `;
+
+    await this.__query(query, [id]);
+    return true;
+  },
+
   __query: function (sql, params = []) {
     return new Promise((resolve, reject) => {
       this.db.all(sql, params, (err, result) => {
