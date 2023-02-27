@@ -123,5 +123,13 @@ export const QRCodesDB = {
     });
   },
 
+  __addImageUrl: function (qrcode) {
+    try {
+      qrcode.imageUrl = this.__generateQRcodeImageUrl(qrcode);
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
 
 }
