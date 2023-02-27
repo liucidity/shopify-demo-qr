@@ -129,7 +129,13 @@ export const QRCodesDB = {
     } catch (err) {
       console.error(err)
     }
+  },
+
+  __generateQRcodeImageUrl: function (qrcode) {
+    return
+    `${shopify.api.config.hostScheme}://${shopify.api.config.hostName}/qrcodes/${qrcode.id}/image`
   }
+
 
 
 }
