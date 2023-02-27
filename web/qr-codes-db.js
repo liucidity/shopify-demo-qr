@@ -97,6 +97,20 @@ export const QRCodesDB = {
     return results.map((qrcode) => this.__addImageUrl(qrcode));
   },
 
+  read: async function (id) {
+    await this.ready;
+    const query = `
+      SELECT * FROM ${this.qrCodesTableName}
+      WHERE id = ?;
+    `;
+
+    const rows = this.__query(query, [id]);
+
+    if (!Array.isArray(rows) || rows?.length !== 1) return undefined;
+
+    return this.__addImageUrl(rows[0])
+  },
+
   __query: function (sql, params = []) {
     return new Promise((resolve, reject) => {
       this.db.all(sql, params, (err, result) => {
