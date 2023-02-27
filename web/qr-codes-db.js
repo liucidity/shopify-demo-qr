@@ -83,7 +83,31 @@ export const QRCodesDB = {
       id,
     ]);
     return true;
-  }
+  },
+
+  list: async function (shopDomain) {
+    await this.ready;
+    const query = `
+      SELECT * FROM ${this.qrCodesTableName}
+      WHERE shopDomain = ?;
+    `;
+
+    const results = await this.__query(query, [shopDomain]);
+
+    return results.map((qrcode) => this.__addImageUrl(qrcode));
+  },
+
+  __query: function (sql, params = []) {
+    return new Promise((resolve, reject) => {
+      this.db.all(sql, params, (err, result) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(result);
+      });
+    });
+  },
 
 
 }
