@@ -142,6 +142,36 @@ export const QRCodesDB = {
     }
   },
 
+  init: async function () {
+    this.db = this.db ?? new sqlite3.Database(DEFAULT_DB_FILE);
+
+    const hasQrCodesTable = await this.__hasQrCodesTable();
+
+    if (hasQrCodesTable) {
+      this.ready = Promise.resolve();
+      /* Create the QR code table if it hasn't been created */
+    } else {
+      const query = `
+        CREATE TABLE ${this.qrCodesTableName} (
+          id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+          shopDomain VARCHAR(511) NOT NULL,
+          title VARCHAR(511) NOT NULL,
+          productId VARCHAR(255) NOT NULL,
+          variantId VARCHAR(255) NOT NULL,
+          handle VARCHAR(255) NOT NULL,
+          discountId VARCHAR(255) NOT NULL,
+          discountCode VARCHAR(255) NOT NULL,
+          destination VARCHAR(255) NOT NULL,
+          scans INTEGER,
+          createdAt DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime'))
+        )
+      `;
+
+      /* Tell the various CRUD methods that they can execute */
+      this.ready = this.__query(query);
+    }
+  },
+
   __hasQrCodesTable: async function () {
     const query = `
       SELECT name from sqlite_schema
