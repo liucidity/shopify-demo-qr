@@ -221,7 +221,7 @@ export const QRCodesDB = {
   },
 
   __goToProductView: function (url, qrcode) {
-    return productViewURL({
+    return productViewUrl({
       discountCode: qrcode.discountCode,
       host: url.toString(),
       productHandle: qrcode.handle,
