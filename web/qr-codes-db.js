@@ -220,6 +220,52 @@ export const QRCodesDB = {
     await this.__query(query, [qrcode.id]);
   },
 
+  __goToProductView: function (url, qrcode) {
+    return productViewURL({
+      discountCode: qrcode.discountCode,
+      host: url.toString(),
+      productHandle: qrcode.handle,
+    });
+  },
+
+  __goToProductCheckout: function (url, qrcode) {
+    return productCheckoutURL({
+      discountCode: qrcode.discountCode,
+      host: url.toString(),
+      variantId: qrcode.variantId,
+      quantity: DEFAULT_PURCHASE_QUANTITY,
+    });
+  },
 
 
+}
+
+function productViewUrl({ host, productHandle, discountCode }) {
+  const url = new URL(host);
+  const productPath = `/products/${productHandle}`
+
+  if (discountCode) {
+    url.pathname = `/discount/${discountCode}`;
+    url.searchParams.append("redirect", productPath);
+  } else {
+    url.pathname = productPath;
+  }
+
+  return url.toString();
+}
+
+function productCheckoutURL({ host, variantId, quatity = 1, discountCode }) {
+  const url = new URL(host);
+  const id = variantId.replace(
+    /gid:\/\/shopify\/ProductVariant\/([0-9]+)/,
+    "$1"
+  );
+
+  url.pathname = `/cart/${id}:${quantity}`;
+
+  if (discountCode) {
+    url.searchParams.append("discount", discountCode);
+  }
+
+  return url.toString();
 }
