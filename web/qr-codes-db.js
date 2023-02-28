@@ -209,7 +209,16 @@ export const QRCodesDB = {
   __generateQRcodeImageUrl: function (qrcode) {
     return
     `${shopify.api.config.hostScheme}://${shopify.api.config.hostName}/qrcodes/${qrcode.id}/image`
-  }
+  },
+
+  __increaseScanCount: async function (qrcode) {
+    const query = `
+      UPDATE ${this.qrCodesTableName}
+      SET scans = scans + 1
+      WHERE id = ?
+    `;
+    await this.__query(query, [qrcode.id]);
+  },
 
 
 
